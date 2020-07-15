@@ -464,6 +464,8 @@ class BuddyMeet {
             api.executeCommand("subject", "%17$s");
             api.executeCommand("avatarUrl", "%18$s");
             api.on("videoConferenceJoined", () => {
+	    	api.executeCommand("toggleChat","");
+                api.executeCommand("toggleAudio","");
                 if(domain === public_domain && "%19$s"){
                     api.executeCommand("password", "%19$s");
                 }
