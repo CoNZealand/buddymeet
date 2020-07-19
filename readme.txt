@@ -113,6 +113,10 @@ Please note that this setting can only be used if you have set up your own Jitsi
 
 == Changelog ==
 
+= 1.8.1-nz
+
+* Add calls to jitsi api to bring up the chat window by default and mute the audio by default
+
 = 1.8.0 =
 
 * On self hosted Jitsi domains, the participant needs to be a moderator before setting a password (Issue: https://community.jitsi.org/t/lock-failed-on-jitsimeetexternalapi/32060)
