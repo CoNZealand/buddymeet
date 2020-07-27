@@ -1,28 +1,28 @@
 <?php
 /**
- * BuddyMeet Component
+ * ConzMeet Component
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main BuddyMeet Component Class
+ * Main ConzMeet Component Class
  *
  * Inspired by BuddyPress skeleton component
  */
-class BuddyMeet_Component extends BP_Component {
+class ConzMeet_Component extends BP_Component {
 	/**
 	 * Constructor method
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 */
 	public function __construct() {
 		parent::start(
-			buddymeet_get_slug(),
-			buddymeet_get_name(),
-			buddymeet_get_includes_dir()
+			conzmeet_get_slug(),
+			conzmeet_get_name(),
+			conzmeet_get_includes_dir()
 		);
 
 	 	$this->includes();
@@ -32,7 +32,7 @@ class BuddyMeet_Component extends BP_Component {
 	/**
 	 * set some actions
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 */
 	private function actions() {
@@ -40,9 +40,9 @@ class BuddyMeet_Component extends BP_Component {
 	}
 
 	/**
-	 * BuddyMeet needed files
+	 * ConzMeet needed files
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 *
 	 * @uses bp_is_active() to check if group component is active
@@ -52,29 +52,29 @@ class BuddyMeet_Component extends BP_Component {
 		$includes = array();
 
 		if ( bp_is_active( 'groups' ) ) {
-			$includes[] = 'buddymeet-group-class.php';
+			$includes[] = 'conzmeet-group-class.php';
 		}
 
 		parent::includes( $includes );
 	}
 
 	/**
-	 * Set up BuddyMeet globals
+	 * Set up ConzMeet globals
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 *
 	 * @global obj $bp BuddyPress's global object
 	 * @uses buddypress() to get the instance data
-	 * @uses buddymeet_get_slug() to get BuddyMeet root slug
+	 * @uses conzmeet_get_slug() to get ConzMeet root slug
 	 */
 	public function setup_globals( $args = array() ) {
 		$bp = buddypress();
 
 		// Set up the $globals array to be passed along to parent::setup_globals()
 		$globals = array(
-			'slug'      => buddymeet_get_slug(),
-			'root_slug' => isset( $bp->pages->{$this->id}->slug ) ? $bp->pages->{$this->id}->slug : buddymeet_get_slug(),
+			'slug'      => conzmeet_get_slug(),
+			'root_slug' => isset( $bp->pages->{$this->id}->slug ) ? $bp->pages->{$this->id}->slug : conzmeet_get_slug(),
             'notification_callback' => array($this, 'format_notifications')
 		);
 
@@ -99,27 +99,27 @@ class BuddyMeet_Component extends BP_Component {
         if ( bp_is_groups_component() && bp_is_single_item() ) {
             $group = ($groups_template !== null && $groups_template->group) ? $groups_template->group : groups_get_current_group();
             $group_link = bp_get_group_permalink( $group );
-            $slug = buddymeet_get_slug();
+            $slug = conzmeet_get_slug();
             $budddymeet_link = trailingslashit($group_link . '/' . $slug);
 
             $sub_nav[] = array(
-                'name' => _x('Meet the Group', 'BuddyMeet group call screen sub nav', 'buddymeet'),
+                'name' => _x('Meet the Group', 'ConzMeet group call screen sub nav', 'conzmeet'),
                 'slug' => 'group',
                 'parent_url' => $budddymeet_link,
                 'parent_slug' => $slug,
-                'screen_function' => 'buddymeet_screen_group',
+                'screen_function' => 'conzmeet_screen_group',
                 'position' => 20,
-                'item_css_id' => 'buddymeet-screen-group'
+                'item_css_id' => 'conzmeet-screen-group'
             );
 
             $sub_nav[] = array(
-                'name' => _x('Meet Members', 'BuddyMeet members call screen sub nav', 'buddymeet'),
+                'name' => _x('Meet Members', 'ConzMeet members call screen sub nav', 'conzmeet'),
                 'slug' => 'members',
                 'parent_url' => $budddymeet_link,
                 'parent_slug' => $slug,
-                'screen_function' => 'buddymeet_screen_members',
+                'screen_function' => 'conzmeet_screen_members',
                 'position' => 10,
-                'item_css_id' => 'buddymeet-screen-members'
+                'item_css_id' => 'conzmeet-screen-members'
             );
 
             foreach ($sub_nav as $nav) {
@@ -138,7 +138,7 @@ class BuddyMeet_Component extends BP_Component {
     }
 
     public function members_autocomplete() {
-        check_ajax_referer( 'buddymeet_members_autocomplete' );
+        check_ajax_referer( 'conzmeet_members_autocomplete' );
 
         global $bp;
 
@@ -156,7 +156,7 @@ class BuddyMeet_Component extends BP_Component {
         }
 
         $exclude = array(get_current_user_id());
-        $room_members = groups_get_groupmeta($group_id, BuddyMeet::ROOM_MEMBERS_PREFIX . $room);
+        $room_members = groups_get_groupmeta($group_id, ConzMeet::ROOM_MEMBERS_PREFIX . $room);
         if($room_members){
             $exclude = array_unique(array_merge($exclude, $room_members));
         }
@@ -178,7 +178,7 @@ class BuddyMeet_Component extends BP_Component {
     }
 
     public function members_add_to_invite_list() {
-        check_ajax_referer( 'buddymeet_members_add_invite' );
+        check_ajax_referer( 'conzmeet_members_add_invite' );
 
         $member_id = isset($_POST['member_id']) && is_numeric($_POST['member_id']) ? absint($_POST['member_id']) : null;
         $group_id = isset($_POST['group_id']) && is_numeric($_POST['group_id']) ? absint($_POST['group_id']) : null;
@@ -194,14 +194,14 @@ class BuddyMeet_Component extends BP_Component {
             bp_core_fetch_avatar(array( 'item_id' => $user->id )),
             bp_core_get_userlink($user->id),
             esc_html($user->last_active),
-            esc_html__('Remove Invite', 'buddymeet')
+            esc_html__('Remove Invite', 'conzmeet')
         );
 
         die();
     }
 
     public function members_send_invites() {
-        check_ajax_referer( 'buddymeet_send_invites' );
+        check_ajax_referer( 'conzmeet_send_invites' );
 
         $bp = buddypress();
         $group = $bp->groups->current_group;
@@ -229,7 +229,7 @@ class BuddyMeet_Component extends BP_Component {
                         'user_id' => $user_id,
                         'item_id' => $group->id,
                         'secondary_item_id' => $requesting_user_id,
-                        'component_name' => buddymeet_get_slug(),
+                        'component_name' => conzmeet_get_slug(),
                         'component_action' => 'members_send_invites',
                         'allow_duplicate' => true
                     ));
@@ -237,7 +237,7 @@ class BuddyMeet_Component extends BP_Component {
                 }
 
                 $group_link = bp_get_group_permalink( $group );
-                $meet_link = $group_link . buddymeet_get_slug() . '/members/' . $room;
+                $meet_link = $group_link . conzmeet_get_slug() . '/members/' . $room;
 
                 $args = array(
                     'tokens' => array(
@@ -265,7 +265,7 @@ class BuddyMeet_Component extends BP_Component {
     }
 
     public function members_delete_room() {
-        check_ajax_referer( 'buddymeet_members_delete_room' );
+        check_ajax_referer( 'conzmeet_members_delete_room' );
 
         $bp = buddypress();
         $group_id = $bp->groups->current_group->id;
@@ -275,7 +275,7 @@ class BuddyMeet_Component extends BP_Component {
         $this->remove_users_from_room($group_id, array($user_id), $room);
 
         $group_link = bp_get_group_permalink( $bp->groups->current_group );
-        $meet_link = $group_link  . 'buddymeet/members/';
+        $meet_link = $group_link  . 'conzmeet/members/';
         $return = array('redirect' => $meet_link);
 
         die(json_encode($return));
@@ -294,21 +294,21 @@ class BuddyMeet_Component extends BP_Component {
                 $group = groups_get_group( $group_id );
                 $user_fullname = bp_core_get_user_displayname( $requested_user_id );
                 if($requested_user_id === $current_user_id){
-                    $text = sprintf( __( '%s: You sent a meet request', 'buddymeet' ), $group->name );
+                    $text = sprintf( __( '%s: You sent a meet request', 'conzmeet' ), $group->name );
                 } else {
-                    $text = sprintf( __( '%s: User %s sent you a meet request', 'buddymeet' ), $group->name, $user_fullname );
+                    $text = sprintf( __( '%s: User %s sent you a meet request', 'conzmeet' ), $group->name, $user_fullname );
                 }
 
                 $group_link = bp_get_group_permalink( $group );
 
-                $notification_link = $group_link . buddymeet_get_slug() . '/members/' . $room;
+                $notification_link = $group_link . conzmeet_get_slug() . '/members/' . $room;
 
                 bp_notifications_mark_notification( $notification_id, false );
 
-                return apply_filters( 'buddymeet_' . $action . '_notification', '<a href="' . $notification_link . '">' . $text . '</a>', $group_link, $user_fullname, $group->name, $text, $notification_link );
+                return apply_filters( 'conzmeet_' . $action . '_notification', '<a href="' . $notification_link . '">' . $text . '</a>', $group_link, $user_fullname, $group->name, $text, $notification_link );
                 break;
             default:
-                $custom_action_notification = apply_filters( 'buddymeet_' . $action . '_notification', null, $item_id, $secondary_item_id, $total_items, $format );
+                $custom_action_notification = apply_filters( 'conzmeet_' . $action . '_notification', null, $item_id, $secondary_item_id, $total_items, $format );
 
                 if ( ! is_null( $custom_action_notification ) ) {
                     return $custom_action_notification;
@@ -332,12 +332,12 @@ class BuddyMeet_Component extends BP_Component {
     public function add_users_to_room($group_id, $users, $room_id = null, $room_name = null){
         //Add the room in the rooms list of each user
         $room =  array(
-            'id' => $room_id === null ? buddymeet_generate_unique_room() : $room_id,
+            'id' => $room_id === null ? conzmeet_generate_unique_room() : $room_id,
             'name' => $room_name === null ? sprintf(__('Room %s'), time()) : $room_name
         );
 
         foreach($users as $user_id) {
-            $user_rooms_option_key = BuddyMeet::USER_ROOMS_PREFIX . $user_id;
+            $user_rooms_option_key = ConzMeet::USER_ROOMS_PREFIX . $user_id;
             $rooms = groups_get_groupmeta($group_id, $user_rooms_option_key);
             if($rooms){
                 $rooms[] = $room;
@@ -348,7 +348,7 @@ class BuddyMeet_Component extends BP_Component {
         }
 
         //add the users as members of the current room
-        $room_users_option_key = BuddyMeet::ROOM_MEMBERS_PREFIX . $room['id'];
+        $room_users_option_key = ConzMeet::ROOM_MEMBERS_PREFIX . $room['id'];
         $current_users = groups_get_groupmeta($group_id, $room_users_option_key);
         if(!$current_users){
             $current_users = array_unique(array_merge($users, array(get_current_user_id())));
@@ -367,7 +367,7 @@ class BuddyMeet_Component extends BP_Component {
 
         //delete room from all users
         foreach($users as $user_id){
-            $user_rooms_option_key = BuddyMeet::USER_ROOMS_PREFIX . $user_id;
+            $user_rooms_option_key = ConzMeet::USER_ROOMS_PREFIX . $user_id;
             $rooms = groups_get_groupmeta($group_id, $user_rooms_option_key);
             foreach($rooms as $index => $room){
                 if($room['id'] === $room_id){
@@ -382,7 +382,7 @@ class BuddyMeet_Component extends BP_Component {
             }
 
             //remove users from room
-            $room_members_option_key = BuddyMeet::ROOM_MEMBERS_PREFIX . $room_id;
+            $room_members_option_key = ConzMeet::ROOM_MEMBERS_PREFIX . $room_id;
             $members = groups_get_groupmeta($group_id, $room_members_option_key);
             foreach($members as $index => $member){
                 if($member === $user_id){
@@ -404,7 +404,7 @@ class BuddyMeet_Component extends BP_Component {
  *
  * @uses buddypress()
  */
-function buddymeet_load_component() {
-	buddypress()->buddymeet = new BuddyMeet_Component;
+function conzmeet_load_component() {
+	buddypress()->conzmeet = new ConzMeet_Component;
 }
-add_action( 'bp_loaded', 'buddymeet_load_component' );
+add_action( 'bp_loaded', 'conzmeet_load_component' );

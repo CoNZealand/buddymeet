@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyMeet functions
+ * ConzMeet functions
  */
 
 // Exit if accessed directly.
@@ -9,70 +9,70 @@ defined( 'ABSPATH' ) || exit;
 /**
  * What is the version of the plugin.
  *
- * @uses buddymeet()
+ * @uses conzmeet()
  * @return string the version of the plugin
  */
-function buddymeet_get_version() {
-	return buddymeet()->version;
+function conzmeet_get_version() {
+	return conzmeet()->version;
 }
 
 /**
  * Gets the slug of the plugin
  *
- * @uses buddymeet() to get plugin's globals
+ * @uses conzmeet() to get plugin's globals
  * @uses buddypress() to get directory pages global settings
  * @return string the slug
  */
-function buddymeet_get_slug() {
-    $slug = function_exists( 'buddypress' ) && isset( buddypress()->pages->buddymeet->slug ) ?
-        buddypress()->pages->buddymeet->slug : buddymeet()->buddymeet_slug ;
+function conzmeet_get_slug() {
+    $slug = function_exists( 'buddypress' ) && isset( buddypress()->pages->conzmeet->slug ) ?
+        buddypress()->pages->conzmeet->slug : conzmeet()->conzmeet_slug ;
 
-    return apply_filters( 'buddymeet_get_slug', $slug );
+    return apply_filters( 'conzmeet_get_slug', $slug );
 }
 
 /**
  * Gets the name of the plugin
  *
- * @uses buddymeet() to get plugin's globals
+ * @uses conzmeet() to get plugin's globals
  * @uses buddypress() to get directory pages global settings
  * @return string the name
  */
-function buddymeet_get_name() {
-    $name = function_exists( 'buddypress' ) && isset( buddypress()->pages->buddymeet->slug ) ?
-        buddypress()->pages->buddymeet->title : buddymeet()->buddymeet_name ;
+function conzmeet_get_name() {
+    $name = function_exists( 'buddypress' ) && isset( buddypress()->pages->conzmeet->slug ) ?
+        buddypress()->pages->conzmeet->title : conzmeet()->conzmeet_name ;
 
-    return apply_filters( 'buddymeet_get_name', $name );
+    return apply_filters( 'conzmeet_get_name', $name );
 }
 
 
 /**
  * What is the path to the includes dir ?
  *
- * @uses  buddymeet()
+ * @uses  conzmeet()
  * @return string the path
  */
-function buddymeet_get_includes_dir() {
-	return buddymeet()->includes_dir;
+function conzmeet_get_includes_dir() {
+	return conzmeet()->includes_dir;
 }
 
 /**
  * What is the path of the plugin dir ?
  *
- * @uses  buddymeet()
+ * @uses  conzmeet()
  * @return string the path
  */
-function buddymeet_get_plugin_dir() {
-	return buddymeet()->plugin_dir;
+function conzmeet_get_plugin_dir() {
+	return conzmeet()->plugin_dir;
 }
 
 /**
  * What is the url to the plugin dir ?
  *
- * @uses  buddymeet()
+ * @uses  conzmeet()
  * @return string the url
  */
-function buddymeet_get_plugin_url() {
-	return buddymeet()->plugin_url;
+function conzmeet_get_plugin_url() {
+	return conzmeet()->plugin_url;
 }
 
 /**
@@ -80,49 +80,49 @@ function buddymeet_get_plugin_url() {
  *
  * @uses bp_core_update_directory_page_ids() to update the BuddyPres component pages ids
  */
-function buddymeet_activation() {
+function conzmeet_activation() {
     if(function_exists('buddypress')) {
-        buddymeet_register_custom_email_templates();
+        conzmeet_register_custom_email_templates();
     }
 
-    update_option('_buddymeet_enabled', true);
+    update_option('_conzmeet_enabled', true);
 
-    do_action( 'buddymeet_activation' );
+    do_action( 'conzmeet_activation' );
 }
 
 /**
  * Handles plugin deactivation
  */
-function buddymeet_deactivation() {
-	update_option('_buddymeet_enabled', false);
+function conzmeet_deactivation() {
+	update_option('_conzmeet_enabled', false);
 
-	do_action( 'buddymeet_deactivation' );
+	do_action( 'conzmeet_deactivation' );
 }
 
 /**
  * Handles plugin uninstall
  */
-function buddymeet_uninstall() {
-    update_option('_buddymeet_enabled', false);
+function conzmeet_uninstall() {
+    update_option('_conzmeet_enabled', false);
 }
 
 /**
  * Checks plugin version against db and updates
  *
- * @uses buddymeet_get_version() to get BuddyMeet plugin version
+ * @uses conzmeet_get_version() to get ConzMeet plugin version
  */
-function buddymeet_check_version() {
+function conzmeet_check_version() {
 	// Bail if config does not match what we need
-	if ( buddymeet::bail() ) {
+	if ( conzmeet::bail() ) {
 		return;
 	}
 
 	// Finally upgrade plugin version
-	update_option( '_buddymeet_version', buddymeet_get_version() );
+	update_option( '_conzmeet_version', conzmeet_get_version() );
 }
-add_action( 'buddymeet_admin_init', 'buddymeet_check_version' );
+add_action( 'conzmeet_admin_init', 'conzmeet_check_version' );
 
-function buddymeet_default_settings(){
+function conzmeet_default_settings(){
     return array(
         'enabled' => true,
         'meet_members_enabled' => true,
@@ -145,7 +145,7 @@ function buddymeet_default_settings(){
     );
 }
 
-function buddymeet_groups_get_groupmeta($group_id, $meta_key, $default){
+function conzmeet_groups_get_groupmeta($group_id, $meta_key, $default){
     $value = groups_get_groupmeta( $group_id, $meta_key, true);
 
     if($value === false || $value === ""){
@@ -155,12 +155,12 @@ function buddymeet_groups_get_groupmeta($group_id, $meta_key, $default){
     return $value === "1" ? true : ($value === "0" ? false : $value);
 }
 
-function buddymeet_groups_update_groupmeta($group_id, $meta_key, $default){
+function conzmeet_groups_update_groupmeta($group_id, $meta_key, $default){
     $value = isset($_POST[$meta_key]) ? sanitize_text_field($_POST[$meta_key]) : $default;
     groups_update_groupmeta( $group_id, $meta_key, $value );
 }
 
-function buddymeet_get_current_action(){
+function conzmeet_get_current_action(){
     $bp = buddypress();
     $action = 'members';
 
@@ -172,18 +172,18 @@ function buddymeet_get_current_action(){
     return $action;
 }
 
-function buddymeet_get_current_user_room(){
+function conzmeet_get_current_user_room(){
     $group_id = bp_get_group_id();
     $user_id = get_current_user_id();
-    $room_id = buddymeet_get_current_user_room_from_path();
+    $room_id = conzmeet_get_current_user_room_from_path();
 
     if($room_id){
-        return buddymeet_get_user_room_info($group_id, $user_id, $room_id);
+        return conzmeet_get_user_room_info($group_id, $user_id, $room_id);
     }
     return false;
 }
 
-function buddymeet_get_current_user_room_from_path(){
+function conzmeet_get_current_user_room_from_path(){
     global $wp;
 
     $path_params = explode('members/', wp_parse_url($wp->request)['path']);
@@ -193,7 +193,7 @@ function buddymeet_get_current_user_room_from_path(){
     return false;
 }
 
-function buddymeet_register_custom_email_templates() {
+function conzmeet_register_custom_email_templates() {
 
     // Do not create if it already exists and is not in the trash
     $post_exists = post_exists( '[{{{site.name}}}] You have a new meet request in group: {{group.name}}"' );
@@ -205,11 +205,11 @@ function buddymeet_register_custom_email_templates() {
     // Create post object
     $my_post = array(
         /* translators: do not remove {} brackets or translate its contents. */
-        'post_title'   => __( '[{{{site.name}}}] You have a new meet request in group: {{group.name}}', 'buddymeet' ),
+        'post_title'   => __( '[{{{site.name}}}] You have a new meet request in group: {{group.name}}', 'conzmeet' ),
         /* translators: do not remove {} brackets or translate its contents. */
-        'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join a meet as member of the group &quot;{{group.name}}&quot;. <a href=\"{{{meet.url}}}\">\nGo here to enter the meet</a> or <a href=\"{{{group.url}}}\">visit the group</a> to learn more.", 'buddymeet' ),
+        'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join a meet as member of the group &quot;{{group.name}}&quot;. <a href=\"{{{meet.url}}}\">\nGo here to enter the meet</a> or <a href=\"{{{group.url}}}\">visit the group</a> to learn more.", 'conzmeet' ),
         /* translators: do not remove {} brackets or translate its contents. */
-        'post_excerpt' => __( "{{inviter.name}} has invited you to join a meet as member of the group \"{{group.name}}\". To join the meet, visit: {{{meet.url}}}. To learn more about the group, visit: {{{group.url}}}. To view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddymeet' ),
+        'post_excerpt' => __( "{{inviter.name}} has invited you to join a meet as member of the group \"{{group.name}}\". To join the meet, visit: {{{meet.url}}}. To learn more about the group, visit: {{{group.url}}}. To view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'conzmeet' ),
         'post_status'   => 'publish',
         'post_type' => bp_get_email_post_type() // this is the post type for emails
     );
@@ -232,25 +232,25 @@ function buddymeet_register_custom_email_templates() {
 }
 
 /**
- * Check if buddymeet plugin is enabled for a specific group or generally in the site.
+ * Check if conzmeet plugin is enabled for a specific group or generally in the site.
  *
  * @param bool $group_id
  * @return bool
  */
 
-function buddymeet_is_enabled($group_id = false){
+function conzmeet_is_enabled($group_id = false){
     if($group_id){
-        $enabled = get_option('_buddymeet_enabled') && groups_get_groupmeta($group_id, 'buddymeet_enabled', true);
+        $enabled = get_option('_conzmeet_enabled') && groups_get_groupmeta($group_id, 'conzmeet_enabled', true);
     } else {
-        $enabled = get_option('_buddymeet_enabled') === "1";
+        $enabled = get_option('_conzmeet_enabled') === "1";
     }
     return $enabled;
 }
 
-function buddymeet_get_room_members($room, $group_id, $initialize = true){
+function conzmeet_get_room_members($room, $group_id, $initialize = true){
     $room_members = false;
     if($room !== null) {
-        $room_members_key = BuddyMeet::ROOM_MEMBERS_PREFIX . $room;
+        $room_members_key = ConzMeet::ROOM_MEMBERS_PREFIX . $room;
         $room_members = groups_get_groupmeta($group_id, $room_members_key);
         if (!$room_members && $initialize) {
             $room_members = array(get_current_user_id());
@@ -260,18 +260,18 @@ function buddymeet_get_room_members($room, $group_id, $initialize = true){
     return $room_members;
 }
 
-function buddymeet_is_member_of_room($user_id, $room_id, $group_id){
-    $members = buddymeet_get_room_members($room_id, $group_id);
+function conzmeet_is_member_of_room($user_id, $room_id, $group_id){
+    $members = conzmeet_get_room_members($room_id, $group_id);
     return !$members || in_array($user_id, $members);
 }
 
-function buddymeet_get_user_rooms($group_id, $user_id){
-    $user_rooms_option_key = BuddyMeet::USER_ROOMS_PREFIX . $user_id;
+function conzmeet_get_user_rooms($group_id, $user_id){
+    $user_rooms_option_key = ConzMeet::USER_ROOMS_PREFIX . $user_id;
     return groups_get_groupmeta($group_id, $user_rooms_option_key);
 }
 
-function buddymeet_get_user_room_info($group_id, $user_id, $room_id){
-    $rooms = buddymeet_get_user_rooms($group_id, $user_id);
+function conzmeet_get_user_room_info($group_id, $user_id, $room_id){
+    $rooms = conzmeet_get_user_rooms($group_id, $user_id);
     foreach($rooms as $room){
         if($room['id'] === $room_id){
             return $room;
@@ -280,16 +280,16 @@ function buddymeet_get_user_room_info($group_id, $user_id, $room_id){
     return false;
 }
 
-function buddymeet_is_meet_members_enabled($group_id = false){
+function conzmeet_is_meet_members_enabled($group_id = false){
     if($group_id){
-        $enabled = groups_get_groupmeta($group_id, 'buddymeet_meet_members_enabled', true);
+        $enabled = groups_get_groupmeta($group_id, 'conzmeet_meet_members_enabled', true);
     } else {
         $enabled = false;
     }
     return $enabled;
 }
 
-function buddymeet_render_jitsi_meet($room = null, $subject = null){
+function conzmeet_render_jitsi_meet($room = null, $subject = null){
     if(!bp_is_group_single()){
        return;
     }
@@ -298,7 +298,7 @@ function buddymeet_render_jitsi_meet($room = null, $subject = null){
     $group_id = $bp->groups->current_group->id;
 
     if(is_null($room)){
-        $room = groups_get_groupmeta( $group_id, 'buddymeet_room', true);
+        $room = groups_get_groupmeta( $group_id, 'conzmeet_room', true);
     }
 
     if(is_null($subject)){
@@ -310,23 +310,23 @@ function buddymeet_render_jitsi_meet($room = null, $subject = null){
     $avatar_url = esc_js(get_avatar_url($bp->loggedin_user->userdata->ID));
 
     //apply group settings
-    $password = groups_get_groupmeta( $group_id, 'buddymeet_password', true);
+    $password = groups_get_groupmeta( $group_id, 'conzmeet_password', true);
 
-    $domain =  groups_get_groupmeta( $group_id, 'buddymeet_domain', true);
-    $film_strip_only =  groups_get_groupmeta( $group_id, 'buddymeet_film_strip_only', true) === '1' ?  'true' : 'false';
-    $width =  groups_get_groupmeta( $group_id, 'buddymeet_width', true);
-    $height =  groups_get_groupmeta( $group_id, 'buddymeet_height', true);
-    $start_audio_only =  groups_get_groupmeta( $group_id, 'buddymeet_start_audio_only', true) === '1' ? 'true' : 'false';
-    $default_language =  groups_get_groupmeta( $group_id, 'buddymeet_default_language', true);
-    $background_color =  groups_get_groupmeta( $group_id, 'buddymeet_background_color', true);
-    $show_watermark =  groups_get_groupmeta( $group_id, 'buddymeet_show_watermark', true)  === '1' ? 'true' : 'false';
-    $show_brand_watermark =  groups_get_groupmeta( $group_id, 'buddymeet_show_brand_watermark', true)  === '1' ? 'true' : 'false';
-    $brand_watermark_link =  groups_get_groupmeta( $group_id, 'buddymeet_brand_watermark_link', true);
-    $disable_video_quality_label =  groups_get_groupmeta( $group_id, 'buddymeet_disable_video_quality_label', true) === '1' ? 'true' : 'false';
-    $settings =  groups_get_groupmeta( $group_id, 'buddymeet_settings', true);
-    $toolbar =  groups_get_groupmeta( $group_id, 'buddymeet_toolbar', true);
+    $domain =  groups_get_groupmeta( $group_id, 'conzmeet_domain', true);
+    $film_strip_only =  groups_get_groupmeta( $group_id, 'conzmeet_film_strip_only', true) === '1' ?  'true' : 'false';
+    $width =  groups_get_groupmeta( $group_id, 'conzmeet_width', true);
+    $height =  groups_get_groupmeta( $group_id, 'conzmeet_height', true);
+    $start_audio_only =  groups_get_groupmeta( $group_id, 'conzmeet_start_audio_only', true) === '1' ? 'true' : 'false';
+    $default_language =  groups_get_groupmeta( $group_id, 'conzmeet_default_language', true);
+    $background_color =  groups_get_groupmeta( $group_id, 'conzmeet_background_color', true);
+    $show_watermark =  groups_get_groupmeta( $group_id, 'conzmeet_show_watermark', true)  === '1' ? 'true' : 'false';
+    $show_brand_watermark =  groups_get_groupmeta( $group_id, 'conzmeet_show_brand_watermark', true)  === '1' ? 'true' : 'false';
+    $brand_watermark_link =  groups_get_groupmeta( $group_id, 'conzmeet_brand_watermark_link', true);
+    $disable_video_quality_label =  groups_get_groupmeta( $group_id, 'conzmeet_disable_video_quality_label', true) === '1' ? 'true' : 'false';
+    $settings =  groups_get_groupmeta( $group_id, 'conzmeet_settings', true);
+    $toolbar =  groups_get_groupmeta( $group_id, 'conzmeet_toolbar', true);
 
-    $content = '[buddymeet 
+    $content = '[conzmeet 
             room = "' . $room . '" 
             subject = "' . $subject . '"
             user = "' . $user_name . '"
@@ -350,7 +350,7 @@ function buddymeet_render_jitsi_meet($room = null, $subject = null){
     echo do_shortcode($content);
 }
 
-function buddymeet_generate_unique_room() {
+function conzmeet_generate_unique_room() {
     return sprintf(
         '%04x%04x%04x%04x%04x%04x%04x%04x',
         mt_rand( 0, 0xffff ),

@@ -1,36 +1,36 @@
 <?php
 /**
-Plugin Name: BuddyMeet
+Plugin Name: Conzmeet
 Plugin URI:
 Description: Adds a meeting room with video and audio capabilities to BuddyPress. Powered by <a target="_blank" href="https://jitsi.org/"> Jitsi Meet </a>.
-Version: 1.8.1-nz
+Version: 1.8.1
 Requires at least: 4.6.0
 Tags: buddypress
 License: GPL V2
 Author: Themis Dakanalis <tdakanalis@cytech,gr>
 Author URI: https://www.cytechmobile.com/employee/themis-dakanalis/
-Text Domain: buddymeet
+Text Domain: conzmeet
 Domain Path: /languages
 */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BuddyMeet' ) ) :
+if ( ! class_exists( 'Conzmeet' ) ) :
 /**
- * Main BuddyMeet Class
+ * Main Conzmeet Class
  */
-class BuddyMeet {
+class Conzmeet {
 
-    const USER_ROOMS_PREFIX = 'buddymeet_user_room_';
-    const ROOM_MEMBERS_PREFIX = 'buddymeet_room_members_';
+    const USER_ROOMS_PREFIX = 'conzmeet_user_room_';
+    const ROOM_MEMBERS_PREFIX = 'conzmeet_room_members_';
 
 	private static $instance;
 
 	/**
 	 * Required BuddyPress version for the plugin.
 	 *
-	 * @package BuddyMeet
+	 * @package Conzmeet
 	 * @since 1.0.0
 	 *
 	 * @var  string
@@ -40,7 +40,7 @@ class BuddyMeet {
 	/**
 	 * BuddyPress config.
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 *
 	 * @var array
@@ -48,21 +48,21 @@ class BuddyMeet {
 	public static $bp_config = array();
 
 	/**
-	 * Main BuddyMeet Instance
+	 * Main ConzMeet Instance
 	 *
 	 * Avoids the use of a global
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 *
-	 * @uses BuddyMeet::setup_globals() to set the global needed
-	 * @uses BuddyMeet::includes() to include the required files
-	 * @uses BuddyMeet::setup_actions() to set up the hooks
+	 * @uses ConzMeet::setup_globals() to set the global needed
+	 * @uses ConzMeet::includes() to include the required files
+	 * @uses ConzMeet::setup_actions() to set up the hooks
 	 * @return object the instance
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			self::$instance = new BuddyMeet;
+			self::$instance = new ConzMeet;
 			self::$instance->setup_globals();
 			self::$instance->includes();
 			self::$instance->setup_actions();
@@ -76,52 +76,52 @@ class BuddyMeet {
 	/**
 	 * Some usefull vars
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 *
 	 * @uses plugin_basename()
-	 * @uses plugin_dir_path() to build BuddyMeet plugin path
-	 * @uses plugin_dir_url() to build BuddyMeet plugin url
+	 * @uses plugin_dir_path() to build ConzMeet plugin path
+	 * @uses plugin_dir_url() to build ConzMeet plugin url
 	 */
 	private function setup_globals() {
-		$this->version    = '1.8.1-nz';
+		$this->version    = '1.8.1';
 
 		// Setup some base path and URL information
 		$this->file       = __FILE__;
-		$this->basename   = apply_filters( 'buddymeet_plugin_basename', plugin_basename( $this->file ) );
-		$this->plugin_dir = apply_filters( 'buddymeet_plugin_dir_path', plugin_dir_path( $this->file ) );
-		$this->plugin_url = apply_filters( 'buddymeet_plugin_dir_url',  plugin_dir_url ( $this->file ) );
+		$this->basename   = apply_filters( 'conzmeet_plugin_basename', plugin_basename( $this->file ) );
+		$this->plugin_dir = apply_filters( 'conzmeet_plugin_dir_path', plugin_dir_path( $this->file ) );
+		$this->plugin_url = apply_filters( 'conzmeet_plugin_dir_url',  plugin_dir_url ( $this->file ) );
 
 		// Includes
-		$this->includes_dir = apply_filters( 'buddymeet_includes_dir', trailingslashit( $this->plugin_dir . 'includes'  ) );
-		$this->includes_url = apply_filters( 'buddymeet_includes_url', trailingslashit( $this->plugin_url . 'includes'  ) );
+		$this->includes_dir = apply_filters( 'conzmeet_includes_dir', trailingslashit( $this->plugin_dir . 'includes'  ) );
+		$this->includes_url = apply_filters( 'conzmeet_includes_url', trailingslashit( $this->plugin_url . 'includes'  ) );
 
 		// Languages
-		$this->lang_dir  = apply_filters( 'buddymeet_lang_dir', trailingslashit( $this->plugin_dir . 'languages' ) );
+		$this->lang_dir  = apply_filters( 'conzmeet_lang_dir', trailingslashit( $this->plugin_dir . 'languages' ) );
 
-		// BuddyMeet slug and name
-		$this->buddymeet_slug = apply_filters( 'buddymeet_slug', 'buddymeet' );
-		$this->buddymeet_name = apply_filters( 'buddymeet_name', 'BuddyMeet' );
+		// ConzMeet slug and name
+		$this->conzmeet_slug = apply_filters( 'conzmeet_slug', 'conzmeet' );
+		$this->conzmeet_name = apply_filters( 'conzmeet_name', 'ConzMeet' );
 
-		$this->domain           = 'buddymeet';
+		$this->domain           = 'conzmeet';
 		$this->errors           = new WP_Error(); // Feedback
 	}
 
 	/**
 	 * Ιncludes the needed files
 	 *
-	 * @package BuddyMeet
+	 * @package Conzmeet
 	 * @since 1.0.0
 	 *
 	 * @uses is_admin() for the settings files
 	 */
 	private function includes() {
-		require( $this->includes_dir . 'buddymeet-actions.php'         );
-		require( $this->includes_dir . 'buddymeet-functions.php'       );
+		require( $this->includes_dir . 'conzmeet-actions.php'         );
+		require( $this->includes_dir . 'conzmeet-functions.php'       );
 
 		//TODO CHECK ADMIN INTERFACES
 		/*if( is_admin() ){
-			require( $this->includes_dir . 'admin/buddymeet-admin.php' );
+			require( $this->includes_dir . 'admin/conzmeet-admin.php' );
 		}*/
 	}
 
@@ -129,13 +129,13 @@ class BuddyMeet {
 	/**
 	 * The main hook used is bp_include to load our custom BuddyPress component
      *
-     * @package BuddyMeet
+     * @package ConzMeet
 	 * @since 1.0.0
 	 */
 	private function setup_actions() {
 		// Add actions to plugin activation and deactivation hooks
-		add_action( 'activate_'   . $this->basename, 'buddymeet_activation'   );
-		add_action( 'deactivate_' . $this->basename, 'buddymeet_deactivation' );
+		add_action( 'activate_'   . $this->basename, 'conzmeet_activation'   );
+		add_action( 'deactivate_' . $this->basename, 'conzmeet_deactivation' );
 
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -145,19 +145,19 @@ class BuddyMeet {
 
         add_action( 'bp_setup_nav', array($this, 'set_default_groups_nav'), 20 );
 
-        add_filter( 'buddymeet_custom_settings', array($this, 'buddymeet_post_settings'), 9 );
+        add_filter( 'conzmeet_custom_settings', array($this, 'conzmeet_post_settings'), 9 );
 
-        add_shortcode( 'buddymeet', array($this, 'add_shortcode'));
+        add_shortcode( 'conzmeet', array($this, 'add_shortcode'));
 
-		do_action_ref_array( 'buddymeet_after_setup_actions', array( &$this ) );
+		do_action_ref_array( 'conzmeet_after_setup_actions', array( &$this ) );
 	}
 
     public function set_default_groups_nav() {
         bp_core_new_nav_default (
             array(
-                'parent_slug'       => buddymeet(),
+                'parent_slug'       => conzmeet(),
                 'subnav_slug'       => 'members',
-                'screen_function'   => 'buddymeet_screen_members'
+                'screen_function'   => 'conzmeet_screen_members'
             )
         );
     }
@@ -165,15 +165,15 @@ class BuddyMeet {
 	/**
 	 * Loads the translation
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 * @uses get_locale()
 	 * @uses load_textdomain()
 	 */
 	public function load_textdomain() {
-		$locale = apply_filters( 'buddymeet_load_textdomain_get_locale', get_locale(), $this->domain );
+		$locale = apply_filters( 'conzmeet_load_textdomain_get_locale', get_locale(), $this->domain );
 		$mofile = sprintf( '%1$s-%2$s.mo', $this->domain, $locale );
-		$mofile_global = WP_LANG_DIR . '/buddymeet/' . $mofile;
+		$mofile_global = WP_LANG_DIR . '/conzmeet/' . $mofile;
 
 		if ( ! load_textdomain( $this->domain, $mofile_global ) ) {
 			load_plugin_textdomain( $this->domain, false, basename( $this->plugin_dir ) . '/languages' );
@@ -183,27 +183,27 @@ class BuddyMeet {
     public function enqueue_styles(){
         if(function_exists( 'buddypress' )) {
             global $bp;
-            if (buddymeet_get_slug() === $bp->current_action) {
-                $sub_action = buddymeet_get_current_action();
+            if (conzmeet_get_slug() === $bp->current_action) {
+                $sub_action = conzmeet_get_current_action();
                 if ('members' === $sub_action) {
                     //Enqueue the jquery autocomplete library
-                    wp_enqueue_style('buddymeet-invites-css', buddymeet_get_plugin_url() . "assets/css/invites.css", '', buddymeet_get_version(), 'screen');
+                    wp_enqueue_style('conzmeet-invites-css', conzmeet_get_plugin_url() . "assets/css/invites.css", '', conzmeet_get_version(), 'screen');
                 }
             }
         }
 
-        wp_enqueue_style('buddymeet-css', buddymeet_get_plugin_url() . "assets/css/buddymeet.css", '', buddymeet_get_version(), 'screen');
+        wp_enqueue_style('conzmeet-css', conzmeet_get_plugin_url() . "assets/css/conzmeet.css", '', conzmeet_get_version(), 'screen');
     }
 
     public function enqueue_scripts(){
         $load_scripts = false;
         if(is_page() || is_single()){
             $post = get_post();
-            if($post && has_shortcode($post->post_content, buddymeet_get_slug())){
+            if($post && has_shortcode($post->post_content, conzmeet_get_slug())){
                 $load_scripts = true;
             } else if( function_exists( 'buddypress' )){
                 global $bp;
-                if(buddymeet_get_slug() === $bp->current_action){
+                if(conzmeet_get_slug() === $bp->current_action){
                     $load_scripts = true;
                 }
             }
@@ -211,34 +211,34 @@ class BuddyMeet {
 
         if($load_scripts){
             wp_enqueue_script('jquery-ui-autocomplete');
-            wp_enqueue_script( 'buddymeet-invites-js', buddymeet_get_plugin_url()  . 'assets/js/invites.js', array( 'jquery-ui-autocomplete' ) );
-            wp_localize_script('buddymeet-invites-js', 'args', array(
+            wp_enqueue_script( 'conzmeet-invites-js', conzmeet_get_plugin_url()  . 'assets/js/invites.js', array( 'jquery-ui-autocomplete' ) );
+            wp_localize_script('conzmeet-invites-js', 'args', array(
                 'ajaxurl' =>  admin_url( 'admin-ajax.php', 'relative' )
             ));
 
-            $handle = 'buddymeet-jitsi-js';
-            wp_enqueue_script( $handle, "https://meet.jit.si/external_api.js", array(), buddymeet_get_version(), true);
+            $handle = 'conzmeet-jitsi-js';
+            wp_enqueue_script( $handle, "https://meet.jit.si/external_api.js", array(), conzmeet_get_version(), true);
         }
     }
 
 	/**
 	 * Finally, Load the component
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 */
 	public function load_component() {
 		if ( self::bail() ) {
 			add_action( self::$bp_config['network_admin'] ? 'network_admin_notices' : 'admin_notices', array( $this, 'warning' ) );
 		} else {
-			require( $this->includes_dir . 'buddymeet-component-class.php' );
+			require( $this->includes_dir . 'conzmeet-component-class.php' );
 		}
 	}
 
 	/**
 	 * Checks BuddyPress version
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 */
 	public static function version_check() {
@@ -252,7 +252,7 @@ class BuddyMeet {
 	/**
 	 * Checks if your plugin's config is similar to BuddyPress
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 */
 	public static function config_check() {
@@ -284,10 +284,10 @@ class BuddyMeet {
 		if ( empty( $network_plugins ) )
 			return self::$bp_config;
 
-		$buddymeet = plugin_basename( __FILE__ );
+		$conzmeet = plugin_basename( __FILE__ );
 
-		// Looking for BuddyMeet
-		$check = array( $buddymeet );
+		// Looking for ConzMeet
+		$check = array( $conzmeet );
 
 		// And for BuddyPress if set
 		if ( ! empty( $buddypress ) )
@@ -301,7 +301,7 @@ class BuddyMeet {
 		if ( count( $network_active ) == 1 )
 			self::$bp_config['network_status'] = false;
 
-		self::$bp_config['network_active'] = isset( $network_plugins[ $buddymeet ] );
+		self::$bp_config['network_active'] = isset( $network_plugins[ $conzmeet ] );
 
 		// We need to know if the BuddyPress is network activated to choose the right
 		// notice ( admin or network_admin ) to display the warning message.
@@ -313,7 +313,7 @@ class BuddyMeet {
 	/**
 	 * Bail if BuddyPress config is different than this plugin
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 */
 	public static function bail() {
@@ -330,15 +330,15 @@ class BuddyMeet {
 	/**
 	 * Display a warning message to admin
 	 *
-	 * @package BuddyMeet
+	 * @package ConzMeet
 	 * @since 1.0.0
 	 */
 	public function warning() {
 		$warnings = $resolve = array();
 
 		if ( ! self::version_check() ) {
-			$warnings[] = sprintf( esc_html__( 'BuddyMeet requires at least version %s of BuddyPress.', 'buddymeet' ), self::$required_bp_version );
-			$resolve[]  = sprintf( esc_html__( 'Upgrade BuddyPress to at least version %s', 'buddymeet' ), self::$required_bp_version );
+			$warnings[] = sprintf( esc_html__( 'ConzMeet requires at least version %s of BuddyPress.', 'conzmeet' ), self::$required_bp_version );
+			$resolve[]  = sprintf( esc_html__( 'Upgrade BuddyPress to at least version %s', 'conzmeet' ), self::$required_bp_version );
 		}
 
 		if ( ! empty( self::$bp_config ) ) {
@@ -348,28 +348,28 @@ class BuddyMeet {
 		}
 
 		if ( ! $config['blog_status'] ) {
-			$warnings[] = esc_html__( 'BuddyMeet requires to be activated on the blog where BuddyPress is activated.', 'buddymeet' );
-			$resolve[]  = esc_html__( 'Activate BuddyMeet on the same blog than BuddyPress', 'buddymeet' );
+			$warnings[] = esc_html__( 'ConzMeet requires to be activated on the blog where BuddyPress is activated.', 'conzmeet' );
+			$resolve[]  = esc_html__( 'Activate ConzMeet on the same blog than BuddyPress', 'conzmeet' );
 		}
 
 		if ( ! $config['network_status'] ) {
-			$warnings[] = esc_html__( 'BuddyMeet and BuddyPress need to share the same network configuration.', 'buddymeet' );
-			$resolve[]  = esc_html__( 'Make sure BuddyMeet is activated at the same level than BuddyPress on the network', 'buddymeet' );
+			$warnings[] = esc_html__( 'ConzMeet and BuddyPress need to share the same network configuration.', 'conzmeet' );
+			$resolve[]  = esc_html__( 'Make sure ConzMeet is activated at the same level than BuddyPress on the network', 'conzmeet' );
 		}
 
 		if ( ! empty( $warnings ) ) {
 			// Give some more explanations to administrator
 			if ( is_super_admin() ) {
 				$deactivate_link = ! empty( $config['network_active'] ) ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-				$deactivate_link = '<a href="' . esc_url( $deactivate_link ) . '">' . esc_html__( 'deactivate', 'buddymeet' ) . '</a>';
-				$resolve_message = '<ol><li>' . sprintf( __( 'You should %s BuddyMeet', 'buddymeet' ), $deactivate_link ) . '</li>';
+				$deactivate_link = '<a href="' . esc_url( $deactivate_link ) . '">' . esc_html__( 'deactivate', 'conzmeet' ) . '</a>';
+				$resolve_message = '<ol><li>' . sprintf( __( 'You should %s ConzMeet', 'conzmeet' ), $deactivate_link ) . '</li>';
 
 				foreach ( (array) $resolve as $step ) {
 					$resolve_message .= '<li>' . $step . '</li>';
 				}
 
 				if ( $config['network_status'] && $config['blog_status']  )
-					$resolve_message .= '<li>' . esc_html__( 'Once done try to activate BuddyMeet again.', 'buddymeet' ) . '</li></ol>';
+					$resolve_message .= '<li>' . esc_html__( 'Once done try to activate ConzMeet again.', 'conzmeet' ) . '</li></ol>';
 
 				$warnings[] = $resolve_message;
 			}
@@ -385,14 +385,14 @@ class BuddyMeet {
 	}
 
     /**
-     * Registers the buddymeet shortcode
+     * Registers the conzmeet shortcode
      * @param $params
      */
     public function add_shortcode($params) {
         global $wp;
-        $params = apply_filters('buddymeet_custom_settings', $params);
-        $params = wp_parse_args($params, buddymeet_default_settings());
-        $hangoutMessage = __("The video call has been ended.", "buddymeet");
+        $params = apply_filters('conzmeet_custom_settings', $params);
+        $params = wp_parse_args($params, conzmeet_default_settings());
+        $hangoutMessage = __("The video call has been ended.", "conzmeet");
 
         $script = sprintf(
             $this->get_jitsi_init_template(),
@@ -423,7 +423,7 @@ class BuddyMeet {
             //add it in the page
             echo '<script>' . $script . '</script>';
         } else {
-            $handle = "buddymeet-jitsi-js";
+            $handle = "conzmeet-jitsi-js";
             wp_add_inline_script($handle, $script);
         }
 
@@ -442,6 +442,7 @@ class BuddyMeet {
                 parentNode: document.querySelector("%7$s"),
                 configOverwrite: {
                     startAudioOnly: %8$b === 1,
+		    startWithAudioMuted: true,
                     defaultLanguage: "%9$s",
                 },
                 interfaceConfigOverwrite: {
@@ -465,7 +466,6 @@ class BuddyMeet {
             api.executeCommand("avatarUrl", "%18$s");
             api.on("videoConferenceJoined", () => {
 	    	api.executeCommand("toggleChat","");
-                api.executeCommand("toggleAudio","");
                 if(domain === public_domain && "%19$s"){
                     api.executeCommand("password", "%19$s");
                 }
@@ -487,11 +487,11 @@ class BuddyMeet {
             window.api = api;';
     }
 
-    public function buddymeet_post_settings($settings){
+    public function conzmeet_post_settings($settings){
         $extra = array();
         if(is_page() || is_single()) {
             $post = get_post();
-            if ($post && has_shortcode($post->post_content, buddymeet_get_slug())) {
+            if ($post && has_shortcode($post->post_content, conzmeet_get_slug())) {
                 $user = wp_get_current_user();
                 if($user->exists()) {
                     if (!array_key_exists('user', $settings)) {
@@ -508,16 +508,16 @@ class BuddyMeet {
     }
 }
 
-function buddymeet() {
-	return buddymeet::instance();
+function conzmeet() {
+	return conzmeet::instance();
 }
 
-buddymeet();
+conzmeet();
 
 /**
- * BuddyMeet unistall Hook registration
+ * ConzMeet unistall Hook registration
  */
-register_uninstall_hook( __FILE__, 'buddymeet_uninstall' );
+register_uninstall_hook( __FILE__, 'conzmeet_uninstall' );
 
 endif;
 

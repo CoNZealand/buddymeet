@@ -67,7 +67,7 @@ jQuery(document).ready( function() {
 				//we only initialize the meet once until it gets explicitly closed
 				initializeMeet = false;
 				autocomplete(jQuery('#room').val());
-				buddymeet_refresh_buttons_state();
+				conzmeet_refresh_buttons_state();
 			},
 			error: function(data){
 			}
@@ -80,22 +80,22 @@ jQuery(document).ready( function() {
 	jQuery('#active-rooms').on( 'change', function(e) {
 		const room =  jQuery('#active-rooms').val();
 		let location = window.location.href;
-		location = location.substr(0, location.indexOf('buddymeet/')) + 'buddymeet/members/';
+		location = location.substr(0, location.indexOf('conzmeet/')) + 'conzmeet/members/';
 		window.location = location + room;
 
 		e.preventDefault();
 	});
 
 	jQuery('#room_name').on( 'keyup', function(e) {
-		buddymeet_refresh_buttons_state();
+		conzmeet_refresh_buttons_state();
 	});
 
-	buddymeet_refresh_buttons_state();
+	conzmeet_refresh_buttons_state();
 
 	function autocomplete(room){
 		const options = {
 			minLength: 3,
-			select: buddymeet_on_autocomplete_select,
+			select: conzmeet_on_autocomplete_select,
 			source: function( request, response ) {
 				jQuery('#send-to-input').addClass('autocomplete-loading');
 
@@ -129,7 +129,7 @@ jQuery(document).ready( function() {
 		};
 	}
 
-	function buddymeet_on_autocomplete_select( event, ui) {
+	function conzmeet_on_autocomplete_select( event, ui) {
 		const member_id = ui.item.value;
 		// Put the item in the invite list
 		jQuery('#send-to-input').addClass('autocomplete-loading');
@@ -153,14 +153,14 @@ jQuery(document).ready( function() {
 
 					jQuery('.action a').click(function(){
 						jQuery(this).closest('li').remove();
-						buddymeet_refresh_buttons_state();
+						conzmeet_refresh_buttons_state();
 					});
 				}
 
 				jQuery('#send-to-input').removeClass('autocomplete-loading');
 
 				// Refresh the submit button state
-				buddymeet_refresh_buttons_state();
+				conzmeet_refresh_buttons_state();
 			},
 			error: function(data){
 			}
@@ -172,7 +172,7 @@ jQuery(document).ready( function() {
 		return false;
 	}
 
-	function buddymeet_refresh_buttons_state(){
+	function conzmeet_refresh_buttons_state(){
 
 		const hasInvites = jQuery( '#meet-invite-list li' ).length;
 		const roomName = jQuery( '#room_name' ).val();

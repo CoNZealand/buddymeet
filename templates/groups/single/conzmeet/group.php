@@ -3,5 +3,5 @@ if ( !defined( 'ABSPATH' ) ) exit;
 ?>
 
 <div class="group-meet">
-<?php buddymeet_render_jitsi_meet(); ?>
+<?php conzmeet_render_jitsi_meet(); ?>
 </div>

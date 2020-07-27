@@ -5,7 +5,7 @@ Tags: BuddyMeet, jitsi, video, audio, conference, buddypress
 Requires at least: 4.5
 Tested up to: 5.4.2
 Requires PHP: 5.3
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,9 +113,9 @@ Please note that this setting can only be used if you have set up your own Jitsi
 
 == Changelog ==
 
-= 1.8.1-nz
+= 1.8.1 = 
 
-* Add calls to jitsi api to bring up the chat window by default and mute the audio by default
+* make meet come up with audio and video muted
 
 = 1.8.0 =
 
